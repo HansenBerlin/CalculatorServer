@@ -45,7 +45,7 @@ public class Server extends UnicastRemoteObject implements IServerImplementation
         }
         return calculateArrayWithoutParanthesis(input);
     }
-    
+
 
     private String replaceParanthesis(String input)
     { 
@@ -73,7 +73,8 @@ public class Server extends UnicastRemoteObject implements IServerImplementation
             }
         }
         return input;
-    }   
+    }  
+
 
 	// wird noch von Corentins Logik ersetzt
     private String calculateArrayWithoutParanthesis(String evaluate) throws ScriptException
@@ -84,6 +85,7 @@ public class Server extends UnicastRemoteObject implements IServerImplementation
         System.out.println(testReturn);
         return testReturn;
     } 
+    
     
     public boolean checkForValidUserInput(String input)
     {
