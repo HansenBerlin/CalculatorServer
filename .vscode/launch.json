@@ -14,7 +14,7 @@
             "type": "java",
             "name": "Launch Server",
             "request": "launch",
-            "mainClass": "Server",
+            "mainClass": "ServerCalculatorService",
             "projectName": "Calculator Server_e1c8f265"
         }
     ]
