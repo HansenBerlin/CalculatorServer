@@ -12,9 +12,9 @@
         },
         {
             "type": "java",
-            "name": "Launch CalculatorServer",
+            "name": "Launch Server",
             "request": "launch",
-            "mainClass": "CalculatorServer",
+            "mainClass": "Server",
             "projectName": "Calculator Server_e1c8f265"
         }
     ]

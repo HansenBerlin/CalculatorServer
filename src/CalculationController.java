@@ -1,40 +1,16 @@
-﻿import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+﻿import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-public class Server extends UnicastRemoteObject implements IServerImplementation
+public class CalculationController extends UnicastRemoteObject implements IServerImplementation
 {
-	protected Server() throws RemoteException 
+    public CalculationController() throws RemoteException
     {
-        super();
+
     }
 
-    public static void main(String[] args) throws RemoteException, MalformedURLException 
-    {				
-		System.out.println("RMI server started");
-        try 
-        { 
-            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-            System.out.println("java RMI registry created.");
-        } 
-        catch (RemoteException e) 
-        {
-            System.out.println("java RMI registry already exists.");
-        }
-           
-        Server server = new Server();
-
-        Naming.rebind("rmi://localhost/Server", server);
-        System.out.println("PeerServer bound in registry");
-	}  
-    
     public String createClearStringWithoutParanthesis(String input) throws ScriptException
     {
 		System.out.println("Request to calculate: " + input);
@@ -105,4 +81,5 @@ public class Server extends UnicastRemoteObject implements IServerImplementation
         else
             return false;
     }
+    
 }
