@@ -135,8 +135,11 @@ public class CalculatorController
         while(input.contains("("))
         {
             String subExpression = replaceParanthesis(input);
+            //System.out.println("Subexpression: " + subExpression);
             String result = Double.toString(rechnen(subExpression));
+            //System.out.println("Result from rechnen: " + result);
             input = input.replace("(" + subExpression + ")", result);
+            //System.out.println("input after replace: " + input);
         }
 
         input = String.format("%.2f", rechnen(input));
