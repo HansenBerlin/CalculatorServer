@@ -129,14 +129,21 @@ public class CalculatorController
 
     public String calculateInput(String input)
     {
+        if (!checkForValidUserInput(input))
+            return "ungültige Eingabe";
+
         while(input.contains("("))
         {
             String subExpression = replaceParanthesis(input);
             String result = Double.toString(rechnen(subExpression));
             input = input.replace("(" + subExpression + ")", result);
         }
-        return Double.toString(rechnen(input));
+
+        input = Double.toString(rechnen(input));
+        System.out.println("Response: " + input + "\n");
+        return input;
     }
+
 
     private String replaceParanthesis(String input)
     { 
@@ -164,5 +171,23 @@ public class CalculatorController
             }
         }
         return input;
-    }          
+    } 
+
+    
+    private boolean checkForValidUserInput(String input)
+    {
+        int paranthesis = 0;
+
+        for (int i = 0; i < input.length(); i++) 
+        {
+            if (input.charAt(i) == '(')
+                paranthesis++;
+            else if (input.charAt(i) == ')')
+                paranthesis--;            
+        }
+        if (paranthesis == 0)
+            return true;
+        else
+            return false;
+    }
 }
