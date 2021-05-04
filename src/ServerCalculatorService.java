@@ -3,11 +3,15 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ServerCalculatorService extends UnicastRemoteObject implements IServerImplementation
 {
+    static String serverEndpoint = "";
 
     protected ServerCalculatorService() throws RemoteException 
     {
@@ -28,8 +32,9 @@ public class ServerCalculatorService extends UnicastRemoteObject implements ISer
         }
            
         ServerCalculatorService server = new ServerCalculatorService(); 
-        Naming.rebind("rmi://localhost/Server", server);
-        System.out.println("PeerServer bound in registry");
+        Naming.rebind("rmi://localhost/Server", server);        
+        System.out.println("Server bound in registry");
+        serverEndpoint = server.ref.remoteToString();
 	}  
     
     public String calculateUserInput(String input) throws RemoteException
@@ -40,21 +45,27 @@ public class ServerCalculatorService extends UnicastRemoteObject implements ISer
         return result;
     }
 
-    public String sendMessageConnectionEstablished() throws RemoteException 
+    public void printEstablishConnectionMessage() throws RemoteException, ServerNotActiveException 
     {
-        return null;
+        System.out.println("Client with IP " + RemoteServer.getClientHost() + " successfully connected to server");
     }
 
-    public String getServerIP() throws RemoteException 
-    {
-        
-        return null;
+    public String[] getServerAndClientIP() throws RemoteException, ServerNotActiveException 
+    {                
+        String serverIP = serverEndpoint;
+        for (int i = 38; i < serverIP.length()+38; i++) 
+        {
+            String temp = serverIP.substring(i, i+1);  //Character.toString(serverIP.charAt(i));
+            if (!temp.matches("[0-9]+") && !temp.equals("."))
+                serverIP = serverIP.substring(38, i);            
+        }
+
+        return new String[]{serverIP, RemoteServer.getClientHost()};
     }
 
-    public long measureResponseTime() throws RemoteException 
+    public String getServerDateAndTime() throws RemoteException 
     {
-        return System.currentTimeMillis();
-    }      
-    
-    
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        return formatter.format(new Date());
+    } 
 }
