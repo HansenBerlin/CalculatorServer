@@ -139,12 +139,11 @@ public class CalculatorController
             input = input.replace("(" + subExpression + ")", result);
         }
 
-        input = Double.toString(rechnen(input));
+        input = String.format("%.2f", rechnen(input));
         System.out.println("Response: " + input + "\n");
         return input;
-    }
-
-
+    }    
+    
     private String replaceParanthesis(String input)
     { 
         int paranthesisCount = 0;
@@ -155,7 +154,7 @@ public class CalculatorController
             if (input.charAt(i) == '(')
             {
                 paranthesisCount++;
-                tempIteratorVariable = i+1;
+                tempIteratorVariable = i+1;               
 
                 while (paranthesisCount != 0) 
                 {
@@ -165,7 +164,7 @@ public class CalculatorController
                     else if (input.charAt(tempIteratorVariable) == ')')                    
                         paranthesisCount--;                        
                                          
-                    tempIteratorVariable++;                                
+                    tempIteratorVariable++; 
                 }
                 return replaceParanthesis(input.substring(i+1, tempIteratorVariable-1));                
             }
