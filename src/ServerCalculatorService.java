@@ -55,7 +55,7 @@ public class ServerCalculatorService extends UnicastRemoteObject implements ISer
         String serverIP = serverEndpoint;
         for (int i = 38; i < serverIP.length()+38; i++) 
         {
-            String temp = serverIP.substring(i, i+1);  //Character.toString(serverIP.charAt(i));
+            String temp = serverIP.substring(i, i+1); 
             if (!temp.matches("[0-9]+") && !temp.equals("."))
                 serverIP = serverIP.substring(38, i);            
         }
@@ -65,7 +65,7 @@ public class ServerCalculatorService extends UnicastRemoteObject implements ISer
 
     public String getServerDateAndTime() throws RemoteException 
     {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
         return formatter.format(new Date());
     } 
 }

@@ -5,125 +5,167 @@ public class CalculatorController
 {
     private List<String> clean = new ArrayList<String>();    
 
-    public double rechnen(String input) 
-    {
+    public double rechnen(String input) {
+
+
         int n = input.length();
 
-        for (int i = 0; i < n; i++) 
-        {
+        for (int i = 0; i < n; i++) {
             clean.add(Character.toString(input.charAt(i)));
         }
 
         Double a;
         int b;
 
-        if (input.charAt(0) == '-' && input.charAt(1) != '-') 
-        {
+        if (input.charAt(0) == '-' && input.charAt(1) != '-') {
             a = Double.parseDouble(clean.get(1)) * -1;
             clean.set(0, Double.toString(a));
             clean.remove(1);
             b = 1;
 
-            while (clean.get(b).matches("[0-9]+")) 
-            {
+            while (clean.get(b).matches("[0-9]+")) {
                 a = Double.parseDouble(clean.get(b - 1)) * 10 - Double.parseDouble(clean.get(b));
                 clean.set(b - 1, Double.toString(a));
                 clean.remove(b);
+
             }
-        } 
-        else         
+            int c = 10;
+            if (clean.get(b).equals(".")) {
+                clean.remove(b);
+                while (clean.get(b).matches("[0-9]+")) {
+                    a = Double.parseDouble(clean.get(b - 1)) - Double.parseDouble(clean.get(b)) / c;
+                    clean.set(b - 1, Double.toString(a));
+                    clean.remove(b);
+                    c *= 10;
+                }
+
+            }
+
+        } else {
             b = 0;
-        
-        for (int i = 0; i < n; i++) 
-        {
-            if (i < clean.size() - 1 && clean.get(i).matches("[0-9]+")) 
-            {
+        }
+        int c = 10;
+        for (int i = 0; i < n; i++) {
+
+            if (i < clean.size() - 1 && clean.get(i).matches("[0-9]+")) {
                 while (i != clean.size() - 1 && clean.get(i + 1).matches("[0-9]+")) {
                     a = Double.parseDouble(clean.get(i)) * 10 + Integer.parseInt(clean.get(i + 1));
                     clean.set(i, Double.toString(a));
                     clean.remove(i + 1);
                 }
-            }            
+
+            }
+            if (i < clean.size() - 1 && clean.get(i + 1).equals(".")) {
+                clean.remove(i + 1);
+                while (i != clean.size() - 1 && clean.get(i + 1).matches("[0-9]+")) {
+                    a = Double.parseDouble(clean.get(i)) + Double.parseDouble(clean.get(i + 1)) / c;
+                    clean.set(i, Double.toString(a));
+                    clean.remove(i + 1);
+                    c *= 10;
+                }
+                c = 10;
+
+            }
+            if (i < clean.size() - 1 && clean.get(i).equals("-") && "+-*/".contains(clean.get(i - 1))) {
+                a = Double.parseDouble(clean.get(i + 1)) * -1;
+                clean.set(i, Double.toString(a));
+                clean.remove(i + 1);
+
+                while (i != clean.size() - 1 && clean.get(i + 1).matches("[0-9]+")) {
+                    a = Double.parseDouble(clean.get(i)) * 10 - Integer.parseInt(clean.get(i + 1));
+                    clean.set(i, Double.toString(a));
+                    clean.remove(i + 1);
+                }
+
+                if (i < clean.size() - 1 && clean.get(i + 1).equals(".")) {
+                    clean.remove(i + 1);
+                    while (i != clean.size() - 1 && clean.get(i + 1).matches("[0-9]+")) {
+                        a = Double.parseDouble(clean.get(i)) - Double.parseDouble(clean.get(i + 1)) / c;
+                        clean.set(i, Double.toString(a));
+                        clean.remove(i + 1);
+                        c *= 10;
+                    }
+                    c = 10;
+
+                }
+            }
+
         }
 
-        for (int i = 0; i < clean.size(); i++) 
-        {
-            while ("*/".contains(clean.get(i))) 
-            {
+        for (int i = 0; i < clean.size(); i++) {
+            while ("*/".contains(clean.get(i))) {
                 rechnenpunkt(clean.get(i), i);
-                if (i != 1) 
+                if (i != 1) {
                     i -= 2;
-                else 
-                    i--;                
+                } else {
+                    i--;
+                }
             }
         }
+        for (int i = 0; i < clean.size(); i++) {
 
-        for (int i = 0; i < clean.size(); i++) 
-        {
-            if (clean.get(i) == "-" && clean.get(i + 1) == "-") 
-            {
+            if (clean.get(i) == "-" && clean.get(i + 1) == "-") {
                 clean.set(i, "+");
                 clean.remove(i + 1);
             }
+            while ("+-".contains(clean.get(i))) {
 
-            while ("+-".contains(clean.get(i))) 
-            {
                 rechnenstrich(clean.get(i), i);
-                if (i != 1) 
+                if (i != 1) {
                     i -= 2;
-                 else 
-                    i--; 
+                } else {
+                    i--;
+                }
+
             }
+
         }
         return Double.parseDouble(clean.get(0));
     }
 
-    private void rechnenpunkt(String operand, int index) 
-    {
+    private void rechnenpunkt(String operand, int index) {
         double a = Double.parseDouble(clean.get(index - 1));
         double b = Double.parseDouble(clean.get(index + 1));
         double c;
-
-        switch (operand) 
-        {
-            case "*": 
+        switch (operand) {
+            case "*": {
                 c = a * b;
-                break;            
-            case "/": 
+                break;
+            }
+            case "/": {
                 c = a / b;
-                break;            
+                break;
+            }
             default:
                 throw new IllegalArgumentException("Unexpected value: " + operand);
         }
-
         clean.set(index, Double.toString(c));
         clean.remove(index - 1);
         clean.remove(index);
+
     }
 
-    private void rechnenstrich(String operand, int index) 
-    {
+    private void rechnenstrich(String operand, int index) {
         double a = Double.parseDouble(clean.get(index - 1));
         double b = Double.parseDouble(clean.get(index + 1));
         double c;
-        switch (operand) 
-        {
-            case "+": 
+        switch (operand) {
+            case "+": {
                 c = a + b;
                 break;
-            
-            case "-": 
+            }
+            case "-": {
                 c = a - b;
                 break;
-            
+            }
             default:
                 throw new IllegalArgumentException("Unexpected value: " + operand);
         }
-
         clean.set(index, Double.toString(c));
         clean.remove(index - 1);
         clean.remove(index);
-    }
+
+    }    
 
     //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -135,14 +177,15 @@ public class CalculatorController
         while(input.contains("("))
         {
             String subExpression = replaceParanthesis(input);
-            //System.out.println("Subexpression: " + subExpression);
+            System.out.println("Subexpression: " + subExpression);
             String result = Double.toString(rechnen(subExpression));
-            //System.out.println("Result from rechnen: " + result);
+            System.out.println("Result from rechnen: " + result);
             input = input.replace("(" + subExpression + ")", result);
-            //System.out.println("input after replace: " + input);
-        }
-
-        input = String.format("%.2f", rechnen(input));
+            System.out.println("input after replace: " + input);
+            clean.clear();
+        }        
+            
+        input = String.format("%.2f", rechnen(input));  
         System.out.println("Response: " + input + "\n");
         return input;
     }    
@@ -184,6 +227,8 @@ public class CalculatorController
         {
             if (input.charAt(i) == '(')
                 paranthesis++;
+            else if (input.charAt(i) == ')' && paranthesis == 0)
+                return false;
             else if (input.charAt(i) == ')')
                 paranthesis--;            
         }
